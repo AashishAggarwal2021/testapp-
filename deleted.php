@@ -1,0 +1,23 @@
+<?php
+  
+function pg_connection_string_from_database_url() {
+  extract(parse_url($_ENV["DATABASE_URL"]));
+  return "user=$user password=$pass host=$host dbname=" . substr($path, 1); # <- you may want to add sslmode=require there too
+}
+
+$toBeDeleted= $_POST['search'];
+
+$pg_conn = pg_connect(pg_connection_string_from_database_url());
+$toDelete = pg_query($pg_conn, "DELETE FROM salesforce.Product2 where sfid= '$toBeDeleted'");
+
+if(!$toDelete){
+
+echo "Record not found!";
+ 
+}
+
+else{
+  echo "the record has been deleted";
+}
+
+?>
